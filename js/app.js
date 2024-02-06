@@ -4,7 +4,6 @@ const loadPhone = async (searchText) => {
   );
   const data = await res.json();
   const phones = data.data;
-  // console.log(phones);
   displayPhones(phones);
 };
 
@@ -12,6 +11,16 @@ const displayPhones = (phones) => {
   // Get Element
   const phonesContainer = document.getElementById("phones-container");
   phonesContainer.textContent = "";
+
+  const btnShowAll = document.getElementById("btn-show-all");
+  if (phones.length > 12) {
+    btnShowAll.classList.remove("hidden");
+  } else {
+    btnShowAll.classList = "hidden";
+  }
+
+  // Display first 12 phones
+  phones = phones.slice(0, 12);
   phones.forEach((phone) => {
     // Create Element
     const cardDiv = document.createElement("div");
@@ -20,6 +29,7 @@ const displayPhones = (phones) => {
     cardDiv.innerHTML = `
       <figure>
         <img
+          class="pt-8"
           src="${phone.image}"
           alt="Phone"
         />
@@ -35,12 +45,23 @@ const displayPhones = (phones) => {
     // Append Child
     phonesContainer.appendChild(cardDiv);
   });
+  toggleLoadingSpinner(false);
 };
 
 //// Handle Search
 const handleSearch = () => {
+  toggleLoadingSpinner(true);
   const searchField = document.getElementById("search-field");
   const searchText = searchField.value;
-  console.log(searchText);
   loadPhone(searchText);
+};
+
+//// Loading Spinner
+const toggleLoadingSpinner = (isLoading) => {
+  const loadingSpinner = document.getElementById("loading-spinner");
+  if (isLoading) {
+    loadingSpinner.classList.remove("hidden");
+  } else {
+    loadingSpinner.classList.add("hidden");
+  }
 };
